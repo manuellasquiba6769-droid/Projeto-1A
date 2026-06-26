@@ -4,65 +4,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgroHorta Os - IoT Dashboard</title>
+    <title>AgroHorta X - Avançado</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="dashboard">
-        <aside class="sidebar">
-            <div class="logo">
-                <h2>🌱 AgroHorta<span>OS</span></h2>
-            </div>
-            <nav class="menu">
-                <button class="menu-item active">📊 Visão Geral</button>
-                <button id="btn-regar" class="btn-action">⚡ Acionar Irrigação</button>
-            </nav>
-            <div class="system-status">
-                <span class="ping-icon"></span>
-                <p>Sensor Node: <span id="node-status">Online</span></p>
-            </div>
-        </aside>
+    <div id="toast-container" class="toast-container"></div>
 
-        <main class="main-content">
-            <header class="top-bar">
-                <div class="title-section">
-                    <h1>Painel de Controle</h1>
-                    <p id="data-atual">Telemetria em tempo real</p>
-                </div>
-                <button id="btn-refresh" class="btn-refresh">🔄 Atualizar Sensores</button>
-            </header>
+    <div class="app-container">
+        <header class="navbar">
+            <div class="brand">
+                <span class="logo-icon">🍀</span>
+                <h1>AgroHorta <span class="gradient-text">X</span></h1>
+            </div>
+            <div class="system-time" id="clock">00:00:00</div>
+        </header>
 
-            <section class="metrics-grid">
-                <div class="metric-card">
-                    <span class="icon">💧</span>
-                    <div class="metric-data">
-                        <h3>Umidade do Solo</h3>
-                        <p id="val-umidade">--</p>
+        <main class="dashboard-layout">
+            
+            <section class="dash-col">
+                <div class="glass-card controller-card">
+                    <h2>🕹️ Central de Comando</h2>
+                    <p class="desc">Gerencie os atuadores físicos da horta.</p>
+                    
+                    <div class="control-row">
+                        <span>Sistema de Irrigação</span>
+                        <label class="switch">
+                            <input type="checkbox" id="switch-rega">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="control-row">
+                        <span>Coopertura de Proteção UV</span>
+                        <label class="switch">
+                            <input type="checkbox" id="switch-cobertura">
+                            <span class="slider"></span>
+                        </label>
                     </div>
                 </div>
-                <div class="metric-card">
-                    <span class="icon">☀️</span>
-                    <div class="metric-data">
-                        <h3>Temperatura</h3>
-                        <p id="val-temp">--</p>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <span class="icon">⚙️</span>
-                    <div class="metric-data">
-                        <h3>Status da Bomba</h3>
-                        <p id="val-bomba" class="status-off">Inativa</p>
+
+                <div class="glass-card climate-simulator">
+                    <h2>🌤️ Simulador Ambiental</h2>
+                    <p class="desc">Altere o clima para testar a automação.</p>
+                    <div class="climate-buttons">
+                        <button class="btn-climate active" data-clima="ideal">☀️ Ideal</button>
+                        <button class="btn-climate" data-clima="seca">🌵 Seca Extrema</button>
+                        <button class="btn-climate" data-clima="chuva">🌧️ Tempestade</button>
                     </div>
                 </div>
             </section>
 
-            <div class="data-section">
-                <div class="panel-card chart-panel">
-                    <h3>Análise de Tendência (Umidade)</h3>
-                    <div class="chart-mock">
-                        <div class="chart-line-container">
-                            <div class="point" style="bottom: 40%; left: 10%"></div>
-                            <div class="point" style="bottom: 50%; left: 30%"></div>
-                            <div class="point" style="bottom: 75%; left: 50%"></div>
-                            <div class="point" id="live-point" style="bottom: 60%; left: 8
+            <section class="dash-col main-metrics">
+                <div class="glass-card display-card">
+                    <div class="radial-progress-container">
+                        <div class="radial-meta">
+                            <span class="title">UMIDADE DO SOLO</span>
+                            <span class="value" id="main-umidade">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mini-cards-grid">
+                    <div class="glass-card mini">
+                        <h3>🌡️ Temperatura</h3>
+                        <p id="card-temp">--</p>
+                    </div>
+                    <div class="glass-card mini">
+                        <h3>🔋 Bateria do Nodo</h3>
+                        <p id="card-bateria">100%</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dash-col">
+                <div class="glass-card ai-insights">
+                    <h2>🤖 AgroIA Diagnostic</h2>
+                    <div class="ai-bubble">
+                        <p id="ai-text">Analisando dados ambientais para gerar recomendações...</p>
+                    </div>
+                </div>
+
+                <div class="glass-card terminal-card">
+                    <h2>💻 Live Data Stream</h2>
+                    <div class="terminal" id="terminal-stream"></div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
