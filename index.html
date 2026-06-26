@@ -1,1 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroHorta - Monitoramento</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+    <header>
+        <h1>🌱 AgroHorta</h1>
+        <p>Gerenciamento Inteligente de Horta Caseira</p>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>Status do Solo</h2>
+            <div class="info">
+                <p>Umidade: <span id="umidade">65%</span></p>
+                <p>Temperatura: <span id="temperatura">24°C</span></p>
+            </div>
+            <p class="status-bom">Condições Ideais</p>
+        </section>
+
+        <section class="card">
+            <h2>Sistema de Rega</h2>
+            <p>Status atual: <strong id="status-rega">Desligado</strong></p>
+            <button id="btn-regar" class="btn">Regar Agora</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 AgroHorta - Projeto Open Source</p>
+    </footer>
+
+    <script href="script.js"></script>
+</body>
+</html>
