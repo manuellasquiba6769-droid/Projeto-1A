@@ -1,1 +1,27 @@
 
+// Selecionando os elementos do DOM
+const btnRegar = document.getElementById('btn-regar');
+const statusRega = document.getElementById('status-rega');
+
+// Variável para controlar o estado do sistema
+let regando = false;
+
+// Função para alternar o status da rega
+function alternarRega() {
+    regando = !regando; // Inverte o valor booleano
+
+    if (regando) {
+        statusRega.textContent = 'Ligado (Regando...)';
+        statusRega.style.color = '#1976d2';
+        btnRegar.textContent = 'Parar Rega';
+        btnRegar.classList.add('ativo'); // Muda a cor do botão para vermelho via CSS
+    } else {
+        statusRega.textContent = 'Desligado';
+        statusRega.style.color = '#333';
+        btnRegar.textContent = 'Regar Agora';
+        btnRegar.classList.remove('ativo');
+    }
+}
+
+// Ouvinte de evento para o clique do botão
+btnRegar.addEventListener('click', alternarRega);
