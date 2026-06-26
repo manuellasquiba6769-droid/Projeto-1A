@@ -1,69 +1,68 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgroHorta Pro - Painel Interativo</title>
+    <title>AgroHorta Os - IoT Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <div class="header-content">
-            <h1>🌱 AgroHorta <span class="badge">Pro</span></h1>
-            <p>Monitoramento Automatizado em Tempo Real</p>
-        </div>
-    </header>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>🌱 AgroHorta<span>OS</span></h2>
+            </div>
+            <nav class="menu">
+                <button class="menu-item active">📊 Visão Geral</button>
+                <button id="btn-regar" class="btn-action">⚡ Acionar Irrigação</button>
+            </nav>
+            <div class="system-status">
+                <span class="ping-icon"></span>
+                <p>Sensor Node: <span id="node-status">Online</span></p>
+            </div>
+        </aside>
 
-    <main class="container">
-        <div class="col">
-            <section class="card" id="card-sensores">
-                <h2>📊 Leituras Atuais</h2>
-                <div class="grid-sensores">
-                    <div class="sensor-box">
-                        <span class="sensor-label">Umidade do Solo</span>
-                        <span class="sensor-valor" id="txt-umidade">--</span>
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="title-section">
+                    <h1>Painel de Controle</h1>
+                    <p id="data-atual">Telemetria em tempo real</p>
+                </div>
+                <button id="btn-refresh" class="btn-refresh">🔄 Atualizar Sensores</button>
+            </header>
+
+            <section class="metrics-grid">
+                <div class="metric-card">
+                    <span class="icon">💧</span>
+                    <div class="metric-data">
+                        <h3>Umidade do Solo</h3>
+                        <p id="val-umidade">--</p>
                     </div>
-                    <div class="sensor-box">
-                        <span class="sensor-label">Temperatura</span>
-                        <span class="sensor-valor" id="txt-temp">--</span>
+                </div>
+                <div class="metric-card">
+                    <span class="icon">☀️</span>
+                    <div class="metric-data">
+                        <h3>Temperatura</h3>
+                        <p id="val-temp">--</p>
                     </div>
                 </div>
-                <button id="btn-atualizar" class="btn-secundario">🔄 Forçar Atualização</button>
-            </section>
-
-            <section class="card">
-                <h2>⚙️ Atuadores</h2>
-                <div class="controle-rega">
-                    <p>Status da Bomba: <strong id="status-rega">Desligada</strong></p>
-                    <button id="btn-regar" class="btn">Ligar Irrigação</button>
+                <div class="metric-card">
+                    <span class="icon">⚙️</span>
+                    <div class="metric-data">
+                        <h3>Status da Bomba</h3>
+                        <p id="val-bomba" class="status-off">Inativa</p>
+                    </div>
                 </div>
             </section>
-        </div>
 
-        <div class="col">
-            <section class="card">
-                <h2>📈 Gráfico de Umidade</h2>
-                <div class="grafico-container">
-                    <div class="barra-grafico" style="--altura: 40%"><span>40%</span></div>
-                    <div class="barra-grafico" style="--altura: 55%"><span>55%</span></div>
-                    <div class="barra-grafico" style="--altura: 70%"><span>70%</span></div>
-                    <div class="barra-grafico atual" id="barra-atual" style="--altura: 60%"><span>60%</span></div>
-                </div>
-                <p class="legenda">Histórico das últimas leituras (Tempo Real à direita)</p>
-            </section>
-
-            <section class="card alerta-card" id="painel-alerta">
-                <h2>⚠️ Alertas do Sistema</h2>
-                <p id="msg-alerta">Carregando dados dos sensores...</p>
-            </section>
-        </div>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 AgroHorta - Painel de Controle Avançado</p>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
-</html>
+            <div class="data-section">
+                <div class="panel-card chart-panel">
+                    <h3>Análise de Tendência (Umidade)</h3>
+                    <div class="chart-mock">
+                        <div class="chart-line-container">
+                            <div class="point" style="bottom: 40%; left: 10%"></div>
+                            <div class="point" style="bottom: 50%; left: 30%"></div>
+                            <div class="point" style="bottom: 75%; left: 50%"></div>
+                            <div class="point" id="live-point" style="bottom: 60%; left: 8
