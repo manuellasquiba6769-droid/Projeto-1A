@@ -1,77 +1,119 @@
 
-// Capturando Elementos do Painel
-const valUmidade = document.getElementById('val-umidade');
-const valTemp = document.getElementById('val-temp');
-const valBomba = document.getElementById('val-bomba');
-const btnRegar = document.getElementById('btn-regar');
-const btnRefresh = document.getElementById('btn-refresh');
-const livePoint = document.getElementById('live-point');
-const logConsole = document.getElementById('log-console');
+// Gerenciador de Estado Global
+const state = {
+    umidade: 62,
+    temperatura: 24.5,
+    bateria: 98,
+    modoClima: 'ideal',
+    irrigacao: false,
+    cobertura: false
+};
 
-let bombaAtiva = false;
+// DOM Elements
+const mainUmidade = document.getElementById('main-umidade');
+const cardTemp = document.getElementById('card-temp');
+const cardBateria = document.getElementById('card-bateria');
+const switchRega = document.getElementById('switch-rega');
+const switchCobertura = document.getElementById('switch-cobertura');
+const terminalStream = document.getElementById('terminal-stream');
+const aiText = document.getElementById('ai-text');
+const toastContainer = document.getElementById('toast-container');
 
-// Função para registrar logs no painel
-function adicionarLog(mensagem) {
-    const agora = new Date();
-    const horaFormatada = agora.toTimeString().split(' ')[0];
-    
-    const novoLog = document.createElement('p');
-    novoLog.className = 'log-entry';
-    novoLog.innerText = `[${horaFormatada}] ${mensagem}`;
-    
-    logConsole.appendChild(novoLog);
-    logConsole.scrollTop = logConsole.scrollHeight; // Auto-scroll para o último log
+// Sistema de Notificação Ativa (Toast)
+function emitirAviso(msg) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerText = msg;
+    toastContainer.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
 }
 
-// Leitura de Telemetria dos Sensores
-function atualizarTelemetria() {
-    // Simulação de cálculos de sensores estáveis
-    const umidade = Math.floor(Math.random() * (72 - 48 + 1)) + 48; // Entre 48% e 72%
-    const temperatura = (Math.random() * (28.5 - 21.0) + 21.0).toFixed(1); // Ex: 24.3°C
-
-    valUmidade.innerText = `${umidade}%`;
-    valTemp.innerText = `${temperatura}°C`;
-
-    // Move o ponto do gráfico dinamicamente com base no valor da umidade
-    livePoint.style.bottom = `${umidade}%`;
-
-    adicionarLog(`Telemetria atualizada. Umidade: ${umidade}%, Temp: ${temperatura}°C.`);
+// Escrita no Terminal Fake IoT
+function writeTerminal(origem, log) {
+    const p = document.createElement('p');
+    p.innerHTML = `<span style="color: var(--glow-blue)">[${origem}]</span> ${log}`;
+    terminalStream.appendChild(p);
+    terminalStream.scrollTop = terminalStream.scrollHeight;
 }
 
-// Lógica de Atuação da Irrigação
-function gerenciarRega() {
-    bombaAtiva = !bombaAtiva;
+// Engine de Simulação de Sensores Inteligentes
+function rodarSensores() {
+    // Altera tendências baseado no modo climático escolhido pelo usuário
+    if (state.modoClima === 'ideal') {
+        state.umidade += Math.random() > 0.5 ? 1 : -1;
+        state.temperatura = parseFloat((24 + Math.random() * 2).toFixed(1));
+    } else if (state.modoClima === 'seca') {
+        state.umidade = Math.max(20, state.umidade - 3);
+        state.temperatura = Math.min(42, state.temperatura + 0.8);
+    } else if (state.modoClima === 'chuva') {
+        state.umidade = Math.min(98, state.umidade + 4);
+        state.temperatura = Math.max(16, state.temperatura - 0.5);
+    }
 
-    if (bombaAtiva) {
-        valBomba.innerText = "Ativa (Injetando...)";
-        valBomba.className = "status-on";
-        btnRegar.innerText = "Desativar Irrigação";
-        btnRegar.classList.add('active');
-        adicionarLog("⚠️ Comando de atuação enviado: BOMBA LIGADA.");
+    // Impacto mecânico das ações do usuário
+    if (state.irrigacao) {
+        state.umidade = Math.min(95, state.umidade + 6);
+        writeTerminal('ACTUATOR', 'Bomba injetando fluxo hídrico...');
+    }
+
+    // Consumo natural de bateria do dispositivo IoT
+    state.bateria = Math.max(1, state.bateria - (Math.random() > 0.8 ? 1 : 0));
+
+    renderInterface();
+}
+
+// Inteligência Artificial Contextual
+function processarIA() {
+    if (state.umidade < 40) {
+        aiText.innerText = "🚨 Alerta crítico: Estresse hídrico detectado. Ative a irrigação imediatamente para evitar morte celular das folhas.";
+    } else if (state.umidade > 85) {
+        aiText.innerText = "⚠️ Saturação: O solo atingiu capacidade de campo máxima. Risco de asfixia radicular. Evite qualquer rega.";
     } else {
-        valBomba.innerText = "Inativa";
-        valBomba.className = "status-off";
-        btnRegar.innerText = "⚡ Acionar Irrigação";
-        btnRegar.classList.remove('active');
-        adicionarLog("✅ Comando de atuação enviado: BOMBA DESLIGADA.");
-        
-        // Simulação rápida pós rega
-        valUmidade.innerText = "68%";
-        livePoint.style.bottom = "68%";
-        adicionarLog("🌱 Sensor reporta: Recuperação de umidade bem-sucedida (68%).");
+        aiText.innerText = "🌿 Estável: Níveis ótimos de transpiração estomática detectados. Planta em perfeito ciclo de fotossíntese.";
     }
 }
 
-// Event Listeners
-btnRegar.addEventListener('click', gerenciarRega);
-btnRefresh.addEventListener('click', () => {
-    adicionarLog("[USER] Forçando leitura manual de sensores...");
-    atualizarTelemetria();
+// Atualização de toda a Interface Gráfica
+function renderInterface() {
+    mainUmidade.innerText = `${state.umidade}%`;
+    cardTemp.innerText = `${state.temperatura} °C`;
+    cardBateria.innerText = `${state.bateria}%`;
+    processarIA();
+}
+
+// Configuração dos Botões de Clima Interativos
+document.querySelectorAll('.btn-climate').forEach(button => {
+    button.addEventListener('click', (e) => {
+        document.querySelector('.btn-climate.active').classList.remove('active');
+        e.target.classList.add('active');
+        state.modoClima = e.target.dataset.clima;
+        
+        emitirAviso(`Clima ambiental alterado para: ${state.modoClima.toUpperCase()}`);
+        writeTerminal('SYSTEM', `Simulação alterada para perfil de ${state.modoClima}.`);
+    });
 });
 
-// Inicialização Automática
-document.addEventListener("DOMContentLoaded", () => {
-    atualizarTelemetria();
-    // Atualização em background a cada 10 segundos
-    setInterval(atualizarTelemetria, 10000);
+// Eventos de Switches de Hardware
+switchRega.addEventListener('change', (e) => {
+    state.irrigacao = e.target.checked;
+    emitirAviso(state.irrigacao ? "💦 Sistema de aspersão LIGADO" : "🛑 Sistema de aspersão DESLIGADO");
+    writeTerminal('USER', `Comando de bomba invertido para: ${state.irrigacao}`);
 });
+
+switchCobertura.addEventListener('change', (e) => {
+    state.cobertura = e.target.checked;
+    emitirAviso(state.cobertura ? "🛡️ Escudo de Policarbonato Estendido" : "🔓 Escudo UV Recolhido");
+});
+
+// Relógio em Tempo Real
+setInterval(() => {
+    const agora = new Date();
+    document.getElementById('clock').innerText = agora.toTimeString().split(' ')[0];
+}, 1000);
+
+// Loop de execução contínua
+setInterval(rodarSensores, 4000);
+
+// Execução inicial
+writeTerminal('KERNEL', 'AgroHorta Pro OS inicializado com sucesso.');
+renderInterface();
