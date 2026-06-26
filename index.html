@@ -3,37 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgroHorta - Monitoramento</title>
+    <title>AgroHorta Pro - Painel Interativo</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header>
-        <h1>🌱 AgroHorta</h1>
-        <p>Gerenciamento Inteligente de Horta Caseira</p>
+        <div class="header-content">
+            <h1>🌱 AgroHorta <span class="badge">Pro</span></h1>
+            <p>Monitoramento Automatizado em Tempo Real</p>
+        </div>
     </header>
 
     <main class="container">
-        <section class="card">
-            <h2>Status do Solo</h2>
-            <div class="info">
-                <p>Umidade: <span id="umidade">65%</span></p>
-                <p>Temperatura: <span id="temperatura">24°C</span></p>
-            </div>
-            <p class="status-bom">Condições Ideais</p>
-        </section>
+        <div class="col">
+            <section class="card" id="card-sensores">
+                <h2>📊 Leituras Atuais</h2>
+                <div class="grid-sensores">
+                    <div class="sensor-box">
+                        <span class="sensor-label">Umidade do Solo</span>
+                        <span class="sensor-valor" id="txt-umidade">--</span>
+                    </div>
+                    <div class="sensor-box">
+                        <span class="sensor-label">Temperatura</span>
+                        <span class="sensor-valor" id="txt-temp">--</span>
+                    </div>
+                </div>
+                <button id="btn-atualizar" class="btn-secundario">🔄 Forçar Atualização</button>
+            </section>
 
-        <section class="card">
-            <h2>Sistema de Rega</h2>
-            <p>Status atual: <strong id="status-rega">Desligado</strong></p>
-            <button id="btn-regar" class="btn">Regar Agora</button>
-        </section>
+            <section class="card">
+                <h2>⚙️ Atuadores</h2>
+                <div class="controle-rega">
+                    <p>Status da Bomba: <strong id="status-rega">Desligada</strong></p>
+                    <button id="btn-regar" class="btn">Ligar Irrigação</button>
+                </div>
+            </section>
+        </div>
+
+        <div class="col">
+            <section class="card">
+                <h2>📈 Gráfico de Umidade</h2>
+                <div class="grafico-container">
+                    <div class="barra-grafico" style="--altura: 40%"><span>40%</span></div>
+                    <div class="barra-grafico" style="--altura: 55%"><span>55%</span></div>
+                    <div class="barra-grafico" style="--altura: 70%"><span>70%</span></div>
+                    <div class="barra-grafico atual" id="barra-atual" style="--altura: 60%"><span>60%</span></div>
+                </div>
+                <p class="legenda">Histórico das últimas leituras (Tempo Real à direita)</p>
+            </section>
+
+            <section class="card alerta-card" id="painel-alerta">
+                <h2>⚠️ Alertas do Sistema</h2>
+                <p id="msg-alerta">Carregando dados dos sensores...</p>
+            </section>
+        </div>
     </main>
 
     <footer>
-        <p>&copy; 2026 AgroHorta - Projeto Open Source</p>
+        <p>&copy; 2026 AgroHorta - Painel de Controle Avançado</p>
     </footer>
 
-    <script href="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
