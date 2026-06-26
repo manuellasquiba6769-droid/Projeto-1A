@@ -1,76 +1,77 @@
 
-// Mapeamento de Elementos do HTML
-const txtUmidade = document.getElementById('txt-umidade');
-const txtTemp = document.getElementById('txt-temp');
+// Capturando Elementos do Painel
+const valUmidade = document.getElementById('val-umidade');
+const valTemp = document.getElementById('val-temp');
+const valBomba = document.getElementById('val-bomba');
 const btnRegar = document.getElementById('btn-regar');
-const statusRega = document.getElementById('status-rega');
-const btnAtualizar = document.getElementById('btn-atualizar');
-const barraAtual = document.getElementById('barra-atual');
-const painelAlerta = document.getElementById('painel-alerta');
-const msgAlerta = document.getElementById('msg-alerta');
+const btnRefresh = document.getElementById('btn-refresh');
+const livePoint = document.getElementById('live-point');
+const logConsole = document.getElementById('log-console');
 
-let irrigacaoAtiva = false;
+let bombaAtiva = false;
 
-// Função para simular a leitura dos sensores de forma dinâmica
-function lerSensores() {
-    // Gera valores aleatórios realistas
-    const umidadeSorteada = Math.floor(Math.random() * (85 - 35 + 1)) + 35; // 35% a 85%
-    const tempSorteada = Math.floor(Math.random() * (32 - 18 + 1)) + 18; // 18°C a 32°C
-
-    // Atualiza a interface de texto
-    txtUmidade.textContent = `${umidadeSorteada}%`;
-    txtTemp.textContent = `${tempSorteada}°C`;
-
-    // Atualiza a barra do gráfico dinamicamente via CSS Variable
-    barraAtual.style.setProperty('--altura', `${umidadeSorteada}%`);
-    barraAtual.querySelector('span').textContent = `${umidadeSorteada}%`;
-
-    // Processa a lógica de alertas inteligentes baseada nas leituras
-    analisarAlertas(umidadeSorteada);
+// Função para registrar logs no painel
+function adicionarLog(mensagem) {
+    const agora = new Date();
+    const horaFormatada = agora.toTimeString().split(' ')[0];
+    
+    const novoLog = document.createElement('p');
+    novoLog.className = 'log-entry';
+    novoLog.innerText = `[${horaFormatada}] ${mensagem}`;
+    
+    logConsole.appendChild(novoLog);
+    logConsole.scrollTop = logConsole.scrollHeight; // Auto-scroll para o último log
 }
 
-// Analisa os dados para sugerir ações ou dar avisos
-function analisarAlertas(umidade) {
-    if (umidade < 45) {
-        painelAlerta.className = "card alerta-card atencao";
-        msgAlerta.innerHTML = "⚠️ <strong>Solo Seco!</strong> Recomenda-se ligar o sistema de irrigação.";
-    } else if (umidade > 75) {
-        painelAlerta.className = "card alerta-card atencao";
-        msgAlerta.innerHTML = "💧 <strong>Solo muito encharcado!</strong> Desative qualquer irrigação programada.";
+// Leitura de Telemetria dos Sensores
+function atualizarTelemetria() {
+    // Simulação de cálculos de sensores estáveis
+    const umidade = Math.floor(Math.random() * (72 - 48 + 1)) + 48; // Entre 48% e 72%
+    const temperatura = (Math.random() * (28.5 - 21.0) + 21.0).toFixed(1); // Ex: 24.3°C
+
+    valUmidade.innerText = `${umidade}%`;
+    valTemp.innerText = `${temperatura}°C`;
+
+    // Move o ponto do gráfico dinamicamente com base no valor da umidade
+    livePoint.style.bottom = `${umidade}%`;
+
+    adicionarLog(`Telemetria atualizada. Umidade: ${umidade}%, Temp: ${temperatura}°C.`);
+}
+
+// Lógica de Atuação da Irrigação
+function gerenciarRega() {
+    bombaAtiva = !bombaAtiva;
+
+    if (bombaAtiva) {
+        valBomba.innerText = "Ativa (Injetando...)";
+        valBomba.className = "status-on";
+        btnRegar.innerText = "Desativar Irrigação";
+        btnRegar.classList.add('active');
+        adicionarLog("⚠️ Comando de atuação enviado: BOMBA LIGADA.");
     } else {
-        painelAlerta.className = "card alerta-card";
-        msgAlerta.innerHTML = "✅ <strong>Horta Saudável!</strong> Todos os parâmetros estão na faixa ideal.";
+        valBomba.innerText = "Inativa";
+        valBomba.className = "status-off";
+        btnRegar.innerText = "⚡ Acionar Irrigação";
+        btnRegar.classList.remove('active');
+        adicionarLog("✅ Comando de atuação enviado: BOMBA DESLIGADA.");
+        
+        // Simulação rápida pós rega
+        valUmidade.innerText = "68%";
+        livePoint.style.bottom = "68%";
+        adicionarLog("🌱 Sensor reporta: Recuperação de umidade bem-sucedida (68%).");
     }
 }
 
-// Controla o botão liga/desliga da rega
-function alternarIrrigacao() {
-    irrigacaoAtiva = !irrigacaoAtiva;
+// Event Listeners
+btnRegar.addEventListener('click', gerenciarRega);
+btnRefresh.addEventListener('click', () => {
+    adicionarLog("[USER] Forçando leitura manual de sensores...");
+    atualizarTelemetria();
+});
 
-    if (irrigacaoAtiva) {
-        statusRega.textContent = "Ativa (Injetando água...)";
-        statusRega.style.color = "#0288d1";
-        btnRegar.textContent = "Desligar Irrigação";
-        btnRegar.classList.add('ligado');
-    } else {
-        statusRega.textContent = "Desligada";
-        statusRega.style.color = "#2c3e50";
-        btnRegar.textContent = "Ligar Irrigação";
-        btnRegar.classList.remove('ligado');
-        // Ao desligar, simula que a terra ficou mais úmida devido à rega
-        txtUmidade.textContent = "72%";
-        barraAtual.style.setProperty('--altura', '72%');
-        barraAtual.querySelector('span').textContent = "72%";
-        analisarAlertas(72);
-    }
-}
-
-// Eventos de clique dos botões
-btnRegar.addEventListener('click', alternarIrrigacao);
-btnAtualizar.addEventListener('click', lerSensores);
-
-// Inicializa o sistema rodando uma leitura automática assim que abre a página
-lerSensores();
-
-// Loop automático: atualiza os sensores sozinho a cada 7 segundos para dar dinâmica
-setInterval(lerSensores, 7000);
+// Inicialização Automática
+document.addEventListener("DOMContentLoaded", () => {
+    atualizarTelemetria();
+    // Atualização em background a cada 10 segundos
+    setInterval(atualizarTelemetria, 10000);
+});
