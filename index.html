@@ -1,1 +1,91 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroHorta Live Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="toast-container" class="toast-wrapper"></div>
+
+    <div class="dashboard-container">
+        
+        <header class="main-header">
+            <div class="brand">
+                <span class="icon-sprout">🌿</span>
+                <h1>AgroHorta <span class="badge-live">LIVE</span></h1>
+            </div>
+            <div class="header-status">
+                <span class="pulse-indicator"></span>
+                <span id="clock">00:00:00</span>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            
+            <section class="panel-card json-control">
+                <h2>⚡ Atuadores & Comandos</h2>
+                <p class="subtitle">Interaja diretamente com os sistemas físicos da horta.</p>
+                
+                <div class="control-box">
+                    <div class="control-info">
+                        <h3>Irrigação por Gotejamento</h3>
+                        <p>Status: <span id="txt-status-rega" class="status-disabled">Desativado</span></p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-rega">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="control-box">
+                    <div class="control-info">
+                        <h3>Iluminação Auxiliar</h3>
+                        <p>Status: <span id="txt-status-luz" class="status-disabled">Apagada</span></p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-luz">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </section>
+
+            <section class="panel-card main-display">
+                <div class="gauge-area">
+                    <span class="gauge-label">UMIDADE DO SOLO</span>
+                    <span id="display-umidade" class="gauge-value">--</span>
+                </div>
+                <div class="sub-metrics">
+                    <div class="mini-metric">
+                        <span>Temperatura</span>
+                        <strong id="display-temp">--</strong>
+                    </div>
+                    <div class="mini-metric">
+                        <span>Bateria Node</span>
+                        <strong id="display-bateria">100%</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel-card telemetry-panel">
+                <h2>📊 Diagnóstico IA & Logs</h2>
+                
+                <div class="ai-box">
+                    <p id="ai-insight">Aguardando telemetria inicial para gerar insights de cultivo...</p>
+                </div>
+
+                <div class="terminal">
+                    <h3>Terminal de Eventos</h3>
+                    <div id="terminal-log" class="terminal-body"></div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
